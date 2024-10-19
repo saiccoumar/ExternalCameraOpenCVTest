@@ -4,6 +4,7 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import numpy as np
+import os
 # https://developers.google.com/mediapipe/solutions/vision/object_detector/python
 
 MARGIN = 10  # pixels
@@ -12,6 +13,7 @@ FONT_SIZE = 1
 FONT_THICKNESS = 1
 TEXT_COLOR = (255, 0, 0)  # red
 
+model_path = os.path.join(os.getcwd(), "efficientdet_lite0.tflite")
 
 def visualize(
     image,
@@ -45,13 +47,13 @@ def visualize(
 
 
 
-model_path = r"C:\Users\Sai\Work\OpenCVTest\efficientdet_lite0.tflite"
+# model_path = r"C:\Users\Sai\Work\OpenCVTest\efficientdet_lite0.tflite"
 base_options = python.BaseOptions(model_asset_path=model_path)
 options = vision.ObjectDetectorOptions(base_options=base_options,
                                        score_threshold=0.5)
 detector = vision.ObjectDetector.create_from_options(options)
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(2)
 if not cap.isOpened():
     print("Error: Could not open camera.")
     exit()
@@ -70,14 +72,15 @@ while True:
     image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
 
     # STEP 6: Detect objects in the frame
-    detection_result = detector.detect_async(image, 0)
+    # detection_result = detector.detect_async(image, 0)
 
     # STEP 7: Process the detection result. In this case, visualize it.
     image_copy = np.copy(frame)
 
-    annotated_image = visualize(image_copy, detection_result)
+    # annotated_image = visualize(image_copy, detection_result)
     # rgb_annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
-    cv2.imshow('Objecct Detection',annotated_image)
+    cv2.imshow('Objecct Detection',image_copy)
+    # cv2.imshow('Objecct Detection',annotated_image)
 
     # Break the loop when 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
